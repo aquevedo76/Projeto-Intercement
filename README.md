@@ -133,7 +133,7 @@ base_consolidada.head(10)
 # Exporta a base completa para Excel
 base_consolidada.to_excel("BASE_FINAL.xlsx", index=False)
 
-Lista de Premissas Adotadas
+# Lista de Premissas Adotadas
 
 1. Linhas de cabeçalho
 O cabeçalho das colunas não estava na primeira linha. Foi identificado e adotado que os nomes das colunas estão na linha 3 → parâmetro header=2 no carregamento.
