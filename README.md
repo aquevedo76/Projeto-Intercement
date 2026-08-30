@@ -133,3 +133,35 @@ base_consolidada.head(10)
 # Exporta a base completa para Excel
 base_consolidada.to_excel("BASE_FINAL.xlsx", index=False)
 
+Lista de Premissas Adotadas
+
+1. Linhas de cabeçalho
+O cabeçalho das colunas não estava na primeira linha. Foi identificado e adotado que os nomes das colunas estão na linha 3 → parâmetro header=2 no carregamento.
+
+2. Duplicações na base COTAÇÕES
+Identificadas duplicatas por ID da Cotação do SAP. Adotou-se manter apenas a primeira ocorrência (keep="first"), por considerar o ID como identificador único de negócio.
+
+3. Duplicações na base SalesForce e regra de cruzamento
+Chave de cruzamento definida como chave tripla: ID da Cotação do SAP + Material + Cód. Expedição.
+Não foram encontradas duplicatas pela chave tripla após limpeza.
+Regra de deduplicação adotada: remoção de duplicatas por ID da Cotação antes do cruzamento, mantendo primeira ocorrência.
+Garantido que número de linhas da base COTAÇÕES não aumentou após junção (validação validate="1:1").
+
+4. Distinção: sem correspondência × frete zero
+Cotações sem correspondência no SalesForce → coluna Sem_Correspondencia_SF = True → NÃO confundir com frete = 0.
+Valor Frete Comercial = 0 → valor efetivamente informado como zero → condição negociada.
+Esta distinção foi sinalizada em coluna própria e preservada na base final.
+
+5. Janela móvel de 30 dias
+Adotado como data de referência exclusivamente o campo Dt. Criação Sol. → Última Ação em foi ignorada nos cálculos, conforme regra.
+Para cotações do início do período (janela incompleta), utilizou-se apenas o histórico disponível, sem extrapolar dados.
+
+6. Tipos de cotação elegíveis
+Considerados apenas os tipos "Banda" e "PrecoFixo". Os tipos "Prazo" e "FreteComercial" foram excluídos dos cálculos de recorrência e soma de desconto, conforme escopo definido.
+
+7. Valores nulos e ausentes
+Cotações sem correspondência no SalesForce foram mantidas na base final e sinalizadas de forma distinta, conforme exigência do Case.
+
+8. Bibliotecas utilizadas
+pandas → manipulação, limpeza, cruzamento e exportação de dados
+numpy → operações numéricas e tratamento de valores
